@@ -10,17 +10,17 @@ import java.util.Locale;
 public class DateManager {
     Calendar mCalendar;
 
-    public DateManager(){
+    public DateManager() {
         mCalendar = Calendar.getInstance();
     }
 
     //当月の要素を取得
-    public List<Date> getDays(){
+    public List<Date> getDays() {
         //現在の状態を保持
         Date startDate = mCalendar.getTime();
 
         //GridViewに表示するマスの合計を計算
-        int count = getWeeks() * 7 ;
+        int count = getWeeks() * 7;
 
         //当月のカレンダーに表示される前月分の日数を計算
         mCalendar.set(Calendar.DATE, 1);
@@ -29,7 +29,7 @@ public class DateManager {
 
         List<Date> days = new ArrayList<>();
 
-        for (int i = 0; i < count; i ++){
+        for (int i = 0; i < count; i++) {
             days.add(mCalendar.getTime());
             mCalendar.add(Calendar.DATE, 1);
         }
@@ -41,18 +41,18 @@ public class DateManager {
     }
 
     //当月かどうか確認
-    public boolean isCurrentMonth(Date date){
+    public boolean isCurrentMonth(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM", Locale.US);
         String currentMonth = format.format(mCalendar.getTime());
-        if (currentMonth.equals(format.format(date))){
+        if (currentMonth.equals(format.format(date))) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
     //週数を取得
-    public int getWeeks(){
+    public int getWeeks() {
         return mCalendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
     }
 
@@ -64,12 +64,12 @@ public class DateManager {
     }
 
     //翌月へ
-    public void nextMonth(){
+    public void nextMonth() {
         mCalendar.add(Calendar.MONTH, 1);
     }
 
     //前月へ
-    public void prevMonth(){
+    public void prevMonth() {
         mCalendar.add(Calendar.MONTH, -1);
     }
 }

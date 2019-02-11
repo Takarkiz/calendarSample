@@ -2,7 +2,6 @@ package com.takhaki.calendars;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,7 @@ public class CalendarAdapter extends BaseAdapter {
         public TextView dateText;
     }
 
-    public CalendarAdapter(Context context){
+    public CalendarAdapter(Context context) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
         mDateManager = new DateManager();
@@ -48,12 +47,12 @@ public class CalendarAdapter extends BaseAdapter {
             holder.dateText = convertView.findViewById(R.id.dateText);
             convertView.setTag(holder);
         } else {
-            holder = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         //セルのサイズを指定
         float dp = mContext.getResources().getDisplayMetrics().density;
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(parent.getWidth()/7 - (int)dp, (parent.getHeight() - (int)dp * mDateManager.getWeeks() ) / mDateManager.getWeeks());
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(parent.getWidth() / 7 - (int) dp, (parent.getHeight() - (int) dp * mDateManager.getWeeks()) / mDateManager.getWeeks());
         convertView.setLayoutParams(params);
 
         //日付のみ表示させる
@@ -61,15 +60,15 @@ public class CalendarAdapter extends BaseAdapter {
         holder.dateText.setText(dateFormat.format(dateArray.get(position)));
 
         //当月以外のセルをグレーアウト
-        if (mDateManager.isCurrentMonth(dateArray.get(position))){
+        if (mDateManager.isCurrentMonth(dateArray.get(position))) {
             convertView.setBackgroundColor(Color.WHITE);
-        }else {
+        } else {
             convertView.setBackgroundColor(Color.LTGRAY);
         }
 
         //日曜日を赤、土曜日を青に
         int colorId;
-        switch (mDateManager.getDayOfWeek(dateArray.get(position))){
+        switch (mDateManager.getDayOfWeek(dateArray.get(position))) {
             case 1:
                 colorId = Color.RED;
                 break;
@@ -102,20 +101,20 @@ public class CalendarAdapter extends BaseAdapter {
     }
 
     //表示月を取得
-    public String getTitle(){
+    public String getTitle() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM", Locale.US);
         return format.format(mDateManager.mCalendar.getTime());
     }
 
     //翌月表示
-    public void nextMonth(){
+    public void nextMonth() {
         mDateManager.nextMonth();
         dateArray = mDateManager.getDays();
         this.notifyDataSetChanged();
     }
 
     //前月表示
-    public void prevMonth(){
+    public void prevMonth() {
         mDateManager.prevMonth();
         dateArray = mDateManager.getDays();
         this.notifyDataSetChanged();

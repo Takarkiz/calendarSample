@@ -1,7 +1,9 @@
 package com.takhaki.calendars;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,12 +48,25 @@ public class MainActivity extends AppCompatActivity {
         calendarGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Test", "Position: "+String.valueOf(position)+", id: "+String.valueOf(id));
+                Log.d("Test", "Position: " + String.valueOf(position) + ", id: " + String.valueOf(id));
                 Toast.makeText(MainActivity.this, "Clicked day is " + mCalendarAdapter.getDateItem(position), Toast.LENGTH_SHORT).show();
             }
         });
 
         titleText.setText(mCalendarAdapter.getTitle());
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toAddView();
+            }
+        });
+    }
+
+    public void toAddView() {
+        Intent intent = new Intent(this, AddplanActivity.class);
+        startActivity(intent);
     }
 
 }
