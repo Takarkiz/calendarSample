@@ -9,8 +9,10 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -20,10 +22,12 @@ public class CalendarAdapter extends BaseAdapter {
     private Context mContext;
     private DateManager mDateManager;
     private LayoutInflater mLayoutInflater;
+    private ArrayList<Plan> plans;
 
     //カスタムセルを拡張したらここでWigetを定義
     private static class ViewHolder {
-        public TextView dateText;
+        TextView dateText;
+        TextView contentText;
     }
 
     public CalendarAdapter(Context context) {
@@ -45,6 +49,7 @@ public class CalendarAdapter extends BaseAdapter {
             convertView = mLayoutInflater.inflate(R.layout.calandar_cell, null);
             holder = new ViewHolder();
             holder.dateText = convertView.findViewById(R.id.dateText);
+            holder.contentText = convertView.findViewById(R.id.textContent);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -82,6 +87,11 @@ public class CalendarAdapter extends BaseAdapter {
         }
         holder.dateText.setTextColor(colorId);
 
+        // セルに予定された情報があれば表示する
+        if (plans != null) {
+            holder.contentText.setText(plans.get(0).title);
+        }
+
         return convertView;
     }
 
@@ -95,9 +105,35 @@ public class CalendarAdapter extends BaseAdapter {
         return null;
     }
 
-    public String getDateItem(int position) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(".dd", Locale.US);
-        return getTitle() + dateFormat.format(dateArray.get(position));
+    String getDateItem(int position) {
+        SimpleDateFormat formate = new SimpleDateFormat("yyyy.MM.d", Locale.US);
+        SimpleDateFormat yMFormat = new SimpleDateFormat("yyyy.MM", Locale.US);
+        String yearMonth = yMFormat.format(mDateManager.mCalendar.getTime());
+        SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.US);
+        String day = dayFormat.format(dateArray.get(position));
+        int intDay = Integer.parseInt(day);
+        Date clickedDay = new Date();
+
+        try {
+            clickedDay = formate.parse(yearMonth + "." + day);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(clickedDay);
+
+        if (position <= 7) {
+            if (intDay > 21) {
+                calendar.add(Calendar.DAY_OF_WEEK, -5);
+            }
+        } else if (position >= 28) {
+            if (intDay < 7) {
+                calendar.add(Calendar.MONTH, +1);
+            }
+        }
+
+        return formate.format(calendar.getTime());
     }
 
     //表示月を取得
@@ -118,5 +154,9 @@ public class CalendarAdapter extends BaseAdapter {
         mDateManager.prevMonth();
         dateArray = mDateManager.getDays();
         this.notifyDataSetChanged();
+    }
+
+    public void setPlans(ArrayList<Plan> mPlans) {
+        plans = mPlans;
     }
 }

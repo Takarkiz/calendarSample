@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -12,12 +11,16 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView titleText;
     private Button prevButton, nextButton;
     private CalendarAdapter mCalendarAdapter;
     private GridView calendarGridView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +46,13 @@ public class MainActivity extends AppCompatActivity {
         });
         calendarGridView = findViewById(R.id.calendarGridView);
         mCalendarAdapter = new CalendarAdapter(this);
-        calendarGridView.setAdapter(mCalendarAdapter);
+
 
         calendarGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Test", "Position: " + String.valueOf(position) + ", id: " + String.valueOf(id));
-                Toast.makeText(MainActivity.this, "Clicked day is " + mCalendarAdapter.getDateItem(position), Toast.LENGTH_SHORT).show();
+                String date = mCalendarAdapter.getDateItem(position);
+                Toast.makeText(MainActivity.this, date, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -62,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
                 toAddView();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Plan plan = new Plan("test", );
+        calendarGridView.setAdapter(mCalendarAdapter);
     }
 
     public void toAddView() {
